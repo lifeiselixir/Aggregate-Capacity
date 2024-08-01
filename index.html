@@ -114,11 +114,16 @@
 <body>
     <div class="sidebar">
         <h2>Menu</h2>
+        <a href="#" onclick="showHome()">Home</a>
         <a href="#" onclick="showAggregateManagement()">Aggregate Management</a>
     </div>
     <div class="main-content">
-        <h1>Aggregate Capacity Management</h1>
+        <div id="home" style="display: block;">
+            <h1>Welcome to Home</h1>
+            <p>This is the default landing page. Use the menu on the left to navigate to different sections.</p>
+        </div>
         <div id="aggregate-management" style="display: none;">
+            <h1>Aggregate Capacity Management Dashboard</h1>
             <div class="chart-container">
                 <canvas id="aggregateChart"></canvas>
                 <p id="aggregateCapacityDisplay">Aggregate Capacity: $10M</p>
@@ -226,21 +231,31 @@
             alert('Changes saved!');
         }
 
+        function showHome() {
+            document.getElementById('home').style.display = 'block';
+            document.getElementById('aggregate-management').style.display = 'none';
+        }
+
         function showAggregateManagement() {
+            document.getElementById('home').style.display = 'none';
             document.getElementById('aggregate-management').style.display = 'block';
             updateChart();
         }
 
         function downloadReport() {
             const wb = XLSX.utils.book_new();
-            const wsData = [['Sno', 'Week of the Year', 'As of Date', 'Batch', 'Carrier Name', 'Contract Number', 'State', 'Zone', 'Tier', 'County', 'City', 'Zipcode', 'Allocation Type (Direct/Combined/Gate)', 'Combined Category', 'Gate Name', 'Gate Number', 'Aggregate Limit', 'Inforce TIV', 'Aggregate Available', '% Utilized', 'Projected New Business TIV', 'Projected New Business % Utilized', 'Projection of NB and Renewal till Contract End', 'Projected TIV @ Contract End', 'Projected % Utilized @ Contract End', 'Cancellation Ratio (Yearwise Data)', 'Projected TIV @ Contract End With Cancellation Ratio', 'Projected % Utilized @ Contract End With Cancellation Ratio']];
+            const wsData = [['Sno', 'Week of the Year', 'As of Date', 'Batch', 'Carrier Name', 'Contract Number', 'State', 'Zone', 'Tier', 'County', 'City', 'Zipcode', 'Allocation Type (Direct/Combined/Gate)', 'Combined Category', 'Gate Name', 'Gate Number', 'Aggregate Limit', 'Inforce TIV', 'Aggregate Available', '% Utilized', 'Projected New Business TIV', 'Projected New Business % Utilized', 'Risk Description']];
             policies.forEach((policy, index) => {
-                wsData.push([index + 1, '106', '2023-07-04', '1', 'Carrier Name', policy.number, 'AL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'Direct', '', '', '', aggregateLimit, policy.limit, aggregateLimit - currentAggregate, ((aggregateLimit - currentAggregate) / aggregateLimit * 100).toFixed(2), '', '', '', '', '', '', '', '']);
+                wsData.push([index + 1, 'Week ' + (index + 1), new Date().toLocaleDateString(), 'Batch ' + (index + 1), 'Carrier ' + (index + 1), 'Contract ' + (index + 1), 'State ' + (index + 1), 'Zone ' + (index + 1), 'Tier ' + (index + 1), 'County ' + (index + 1), 'City ' + (index + 1), 'Zipcode ' + (index + 1), 'Direct', 'Category ' + (index + 1), 'Gate ' + (index + 1), 'Gate ' + (index + 1), 'Limit ' + (index + 1), 'Inforce ' + (index + 1), 'Available ' + (index + 1), '% ' + (index + 1), 'Projected ' + (index + 1), '% Utilized ' + (index + 1), 'Risk ' + (index + 1)]);
             });
             const ws = XLSX.utils.aoa_to_sheet(wsData);
-            XLSX.utils.book_append_sheet(wb, ws, 'Report');
-            XLSX.writeFile(wb, 'AggregateCapacityReport.xlsx');
+            XLSX.utils.book_append_sheet(wb, ws, 'Aggregate Report');
+            XLSX.writeFile(wb, 'Aggregate_Capacity_Report.xlsx');
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showHome();
+        });
     </script>
 </body>
 </html>
